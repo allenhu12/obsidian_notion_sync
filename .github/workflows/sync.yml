@@ -1,0 +1,29 @@
+
+name: Sync to Notion
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repo content
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - name: Install dependencies
+        run: |
+          pip install requests markdown2 notion-client logging click obsidian_notion_sync 
+      - name: Sync to Notion
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_PAGE_ID: ${{ secrets.NOTION_PAGE_ID }}
+        run: |
+          cd $GITHUB_WORKSPACE
+          obsidian-notion-sync notion-sync
+
+    
